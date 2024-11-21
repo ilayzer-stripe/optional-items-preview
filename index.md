@@ -77,6 +77,21 @@ await stripe.checkout.session.create({
 
 In the above example, when the customer clicks to add the optional item to their order, the initial quantity will be 3, adjustable between 3 and 5, and the customer can always remove the item from their order entirely.
 
+### How do I see which optional items a customer added to their order?
+After a customer adds an optional item to their order, the `line_items` for the Checkout Session update to reflect the addition. When fulfilling your order using the `checkout.session.completed` webhook, make sure to retrieve the line items.
+
+### Seeing `optional_items` on the Checkout Session object
+While `line_items` is the source of truth for items that the customer added to their order as discussed above, you can also check the value of `optional_items` you configured on the Checkout Session object to see which optional items were offered to the customer. `optional_items` is an [expandable](https://docs.stripe.com/expand) property on the Checkout Session object, so you must explicitly request its expansion in your request parameters if you wish to see the property in the response object.
+
+```
+{
+	...
+
+	expand: ["optional_items"]
+}
+```
+Of course, you can still create Checkout Sessions with optional items without requesting expansion of the property.
+
 ## Limitations
 The Optional items feature has some limitations to be aware of…
 
